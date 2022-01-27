@@ -6,22 +6,24 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose')
-// const userRoutes = require('./routes/userRoutes');
-// const productRoutes = require('./routes/productRoutes');
 const index = require('./routes/index');
 require('dotenv').config();
+const path = require('path');
 const app = express();
+var multer  = require('multer')
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
+app.use(express.json())
 
-mongoose.connect("mongodb+srv://zarnapatel:testpassword@cluster0.cjxny.mongodb.net/olxDB", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to database..'))
   .catch(error => {
     console.log('Connection to Database failed..')
     console.log(error) 
 })
 
-app.use(express.static("public"));
+app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
@@ -31,6 +33,7 @@ app.use((req, res, next) => {
 
 //user routes
 app.use('/', index);
+
 
 app.listen(process.env.PORT, function(req,res){
     console.log("Server is listening on post 3000");

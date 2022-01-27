@@ -9,6 +9,12 @@ const userSchema = new mongoose.Schema({
     username: {type:String, unique:true},
     password: String,
     role: String,
+    token: String,
+    profileImage: String
+    // img: { 
+    //     data: Buffer, 
+    //     name: String 
+    //  }
 })
 const User = mongoose.model("User", userSchema);
 
