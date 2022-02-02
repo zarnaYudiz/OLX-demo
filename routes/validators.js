@@ -1,4 +1,5 @@
 const emailvalidator = require("email-validator");
+const { body } = require('express-validator')
 const validators = {};
 
 validators.addUser = (req, res, next) => {
@@ -30,5 +31,32 @@ validators.addProduct = (req, res, next) => {
     next();
 };
 
-
 module.exports = validators;
+
+// const addUser = [
+//     body('fname').not().isEmpty(),
+//     body('lname').not().isEmpty(),
+//     body('role').not().isEmpty(),
+//     body('lname').not().isEmpty(),
+//     body('username').not().isEmpty(),
+//     body('lname').not().isEmpty(),
+//     body('password').not().isEmpty(),
+// ]
+
+// const login = [
+//     body('username').not().isEmpty(),
+//     body('password').not().isEmpty(),
+// ]
+
+// const addProduct = [
+//     body('productName').not().isEmpty(),
+//     body('discription').not().isEmpty(),
+//     body('condition').not().isEmpty(),
+//     body('price').not().isEmpty(),
+// ]
+
+// module.exports = {
+//     addUser,
+// login,
+// addProduct
+// }

@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const multerUpload = require('../multer.config').multerUpload;
 const { applyMiddleware } = require('redux');
-const Product = require('../models/product');
+const ProductDiscription = require('../models/productDiscription');
 
 const userController = {};
 let accessTokens = [];
@@ -83,7 +83,12 @@ userController.userLogin = async (req,res) => {
         if (await bcrypt.compare(req.body.password, user.password)) {   
             const username = req.body.username
             const accessToken = generateAccessToken({name:username})
-            accessTokens.push(accessToken)
+            if (accessTokens.length < 5) { 
+                accessTokens.push(accessToken) 
+            } else {
+                accessTokens.shift()
+                accessTokens.push(accessToken) 
+            }
             const updateUser = await User.updateOne({username}, {token: accessToken})
             if (!updateUser) res.status(400).send("User not updated")
             res.json({ "loginStatus": "Successfully logged in..!", accessToken: accessToken})
@@ -105,27 +110,7 @@ userController.logout = async (req,res) => {
 
 // create access token 
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '50m'});
-}
-
-// - A seller can buy the items but a buyer can't sell an item without becoming seller
-// - buyer can see all the items that needs to be sold and seller can see the items that needs to be bought
-userController.showProducts = async (req,res) => {
-    const role = req.body.role;
-    let foundUser = await User.findOne({username: req.body.username})
-    if(!foundUser) res.send("User does not exist..! Sign Up")
-   
-    if (foundUser.role === "buyer") {
-        // Buyer - all unsold product
-        let products = await Product.find({sold:false})
-        if (!products) res.send("All products are sold..!")
-        res.send(products)
-    } else {
-        //Seller - seller's unsold products
-        let products = await Product.find({ userId:foundUser._id, sold:false })
-        if (!products) res.send("Seller's all products are sold..!")
-        res.send(products)
-    }
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60d'});
 }
 
 module.exports = userController;
