@@ -7,7 +7,7 @@ const { validate } = require('../models/user');
 
 // user
 router.get('/users', middleware.authenticateToken, userController.user);
-router.post('/signup', validators.addUser,validate, userController.userSignup);
+router.post('/signup', validators.addUser, userController.userSignup);
 router.post('/login', validators.login, userController.userLogin);
 router.delete('/logout', middleware.authenticateToken, userController.logout);
 router.post('/add-user-profile-picture', middleware.authenticateToken, userController.addUserProfilePicture);
